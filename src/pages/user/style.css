@@ -1,0 +1,56 @@
+.search-text-box{
+    max-width: 500px;
+    flex: 1 1 auto;
+    width: 100%; 
+    margin-bottom: 20px;
+}
+.checkbox{
+    width: 50px;
+}
+.name{
+    width:30%;
+}
+.email{
+    width: 40%;
+}
+.role{
+    width: 20%
+}
+th{
+    text-align: left;
+    background-color: #0099cc;
+    padding: 5px;
+}
+.row-selected{
+    background-color: #f6f6f6;
+}
+.row{
+    border-bottom: 1px solid #f6f6f6;
+}
+.row td{
+    border-bottom: 1px solid #f6f6f6;
+    padding: 5px;
+}
+.action-btn{
+     box-shadow: none;
+     border: none; 
+     background-color: transparent;  
+     cursor: pointer; 
+     padding: 2px 5px;
+     margin: 5px;
+ }
+ .delete-btn{
+     color: red;
+ }
+ .edit-btn{
+     color: sandybrown;
+ }
+ .delete-selected-btn{
+     border-radius: 5px;
+     box-shadow: none;
+     background-color: red;
+     color: white;
+     border:none;
+     padding: 8px;
+
+ }

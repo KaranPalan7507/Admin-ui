@@ -14,6 +14,7 @@ export default function Table(props) {
     onSelectAllChange,
     selectedRecords,
     selectAll,
+    onSort,
   } = props;
   // rener Table Header
   function renderHeaders() {
@@ -27,8 +28,12 @@ export default function Table(props) {
               onChange={(e) => onSelectAllChange(e.target.checked)}
             />
           </th>
-          {columns.map((column) => (
-            <th key={column} className={column}>
+          {columns.map((column, index) => (
+            <th
+              key={column}
+              className={column}
+              onClick={() => onSort(keys[index])}
+            >
               {column}
             </th>
           ))}

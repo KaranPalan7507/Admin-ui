@@ -3,18 +3,23 @@ import { getUserList } from "./../../api/getUserList";
 import Table from "./../../components/Table";
 import Pagination from "./../../components/Pagination";
 import UserEditModal from "./../../components/UserEditModal";
+import UserAddModal from "./../../components/UserAddModal";
 import "./style.css";
 // user component
 export default function User() {
   // state values
-  const [list, setList] = useState(null);
+  const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [currentPageData, setCurrentPageData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [editUserData, setEditUserData] = useState(null);
+  const [addUserData, setAddUserData] = useState(null);
+
   const [searchText, setSearchText] = useState("");
   const [selectedRecords, setSelectedRecords] = useState({});
   const [selectAll, setSelectAll] = useState(false);
+  const [sortKey, setSortKey] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
 
   //component variables
   const columns = ["Name", "Email", "Role"];
@@ -38,6 +43,24 @@ export default function User() {
       filterData();
     }
   }, [list]);
+  // sort functionality handling
+  useEffect(() => {
+    if (!sortKey) {
+      filterData();
+      return;
+    }
+    let sortedData;
+    if (sortOrder === "desc") {
+      sortedData = [...filteredList].sort((item1, item2) =>
+        item1[sortKey] < item2[sortKey] ? 1 : -1
+      );
+    } else {
+      sortedData = [...filteredList].sort((item1, item2) =>
+        item1[sortKey] < item2[sortKey] ? -1 : 1
+      );
+    }
+    setFilteredList(sortedData);
+  }, [sortKey, sortOrder]);
 
   // hook - use effect -  get current page data on page change
   useEffect(() => {
@@ -59,6 +82,7 @@ export default function User() {
       }
     });
     setFilteredList(filteredList);
+    setCurrentPage(1);
   }
 
   // on page change from pagination
@@ -85,6 +109,11 @@ export default function User() {
     const editIndex = list.findIndex((item) => item.id === data.id);
     list[editIndex] = data;
     setList(list);
+    filterData(searchText);
+  }
+  // save add user details
+  function addUser(data) {
+    setList([...list, data]);
     filterData(searchText);
   }
 
@@ -129,6 +158,18 @@ export default function User() {
   if (list === null) {
     return <h2>Loading...</h2>;
   }
+  function onSort(key) {
+    if (sortOrder === "desc" && key === sortKey) {
+      setSortOrder("");
+      setSortKey("");
+    } else if (sortKey === key) {
+      setSortOrder("desc");
+    } else {
+      setSortKey(key);
+      setSortOrder("asc");
+    }
+    console.log(sortKey, sortOrder);
+  }
 
   // render user component
   return (
@@ -154,6 +195,7 @@ export default function User() {
             onSelectAllChange={onSelectAllChange}
             selectedRecords={selectedRecords}
             selectAll={selectAll}
+            onSort={onSort}
           />
           <Pagination
             perPageRecords={perPageRecords}
@@ -167,11 +209,23 @@ export default function User() {
             onSubmit={updateUser}
             data={editUserData}
           />
+          <UserAddModal
+            isOpen={!!addUserData}
+            onClose={() => setAddUserData(false)}
+            onSubmit={addUser}
+          />
+
           {Object.keys(selectedRecords).length ? (
             <button onClick={deleteUsers} className="delete-selected-btn">
               Delete Selected
             </button>
           ) : null}
+          <button
+            onClick={() => setAddUserData(true)}
+            className="add-selected-btn"
+          >
+            Add User
+          </button>
         </>
       )}
     </>
